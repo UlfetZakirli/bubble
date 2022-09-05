@@ -11,39 +11,35 @@
 
 <body>
     <div class="container">
-
-        <div id="board" class="board">
-            <!-- <div class="bubble" id="bubble"></div> -->
-
-        </div>
-
-        <div class="buttons">
-            <button class="btn" id="start">Start</button>
-            <button class="btn" id="stop">Stop</button>
-        </div>
-
-        <div class="inputs">
-            <div id="easy">
-
-                <input class="easy" name="mode"  type="radio" checked>
-                <label for="">Easy</label>
+               <div class="buttons">
+                <button id="startBtn">Start</button>
+                <button id="stopBtn">Stop</button>
             </div>
-                <div id="medium">
+        <div class="bubble"></div>
+        
+        <div class="content">
+            
+            <p class="showScore">Score: <span class="score">0</span> </p>
+            <p id="scoresTable"></p>
+            
+            <form action="" class="formMode">
+                <input type="radio" id="easy" name="mode" value="easy" checked>
+                <label for="easy">easy</label>
+                <input type="radio" id="medium" name="mode" value="medium">
+                <label for="medium">medium</label>
+                <input type="radio" id="hard" name="mode" value="hard">
+                <label for="hard">hard</label>
+            </form>
+            
+     
 
-                    <input class="medium" name="mode" type="radio">
-                    <label for="">Medium</label>
-                </div>
-            <div id="hard">
-                <input class="hard" name="mode" type="radio">
-                <label for="">Hard</label>
-            </div>
 
-
-
+          
         </div>
-
-
     </div>
+
+
+
     <script src="script.js"></script>
 </body>
 

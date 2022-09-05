@@ -1,49 +1,99 @@
-const board = document.getElementById('board')
-const starts = document.getElementById('start')
-const stops = document.getElementById('stop')
-const easy = document.getElementById('easy')
-const medium = document.getElementById('medium')
-const hard = document.getElementById('hard')
+const scoreTag = document.getElementById('content .score')
+const bubble = document.querySelector('.bubble')
+const startBtn = document.getElementById('startBtn')
+const stopBtn = document.getElementById('stopBtn')
+const formMode = document.querySelector('.formMode')
+const scoresTable = document.querySelector('#scoresTable')
 
 
-
-starts.addEventListener('click', () => {
-    // let interval =setInterval(addBubble,1000)
-   
-    if (document.querySelector('.easy').checked) {
-        setInterval(addBubble,3000)
+let userName = ''
+const modes = {
+    hard: {
+        time: 1000,
+        scoreCounter: 1
+    },
+    medium: {
+        time: 2000,
+        scoreCounter: 2
+    },
+    easy: {
+        time: 3000,
+        scoreCounter: 3
     }
-    if (document.querySelector('.medium').checked) {
-        setInterval(addBubble,2000)
+}
+
+
+let isContinue = false
+let mode = modes.easy
+
+let bubleInterval = null
+let count = 0
+let score = 0
+
+const startBubbling = () => {
+    startBtn.disabled = true
+    stopBtn.disabled = false
+    isContinue = true
+    while (!userName) {
+        userName = prompt('Please enter your name', "noName")
     }
-    if (document.querySelector('.hard').checked) {
-        setInterval(addBubble,1000)
-    }
-    stops.addEventListener('click', () => {
-        clearInterval(interval)
-    })
-})
-
-function addBubble() {
-    let bubble = document.createElement('div')
-    bubble.classList.add('bubble')
-    board.appendChild(bubble)
 
 
-hard.addEventListener('click', () => {
-     document.querySelector('.hard').setAttribute('checked', '')
-     document.querySelector('.easy').removeAttribute('checked')
-     document.querySelector('.medium').removeAttribute('checked')
-})
-easy.addEventListener('click', () => {
-    document.querySelector('.easy').setAttribute('checked', '')
-    document.querySelector('.hard').removeAttribute('checked')
-    document.querySelector('.medium').removeAttribute('checked')
-})
-medium.addEventListener('click', () => {
-    document.querySelector('.medium').setAttribute('checked', '')
-    document.querySelector('.hard').removeAttribute('checked')
-    document.querySelector('.medium').removeAttribute('checked')
-})
+
+    bubleInterval = setInterval(() => {
+        let newBuble = document.createElement('span')
+        newBuble.classList.add('bubble')
+        newBuble.style.top = `${Math.floor(Math.random()*350)}px`
+        newBuble.style.left = `${Math.floor(Math.random()*350)}px`
+        bubble.appendChild(newBuble)
+        count++
+        newBuble.addEventListener('click', () => {
+            newBuble.parentElement.removeChild(newBuble)
+            score += mode.scoreCounter
+            count--
+            scoreTag.textContent = score
+        })
+        if (count == 100) {
+            alert('Game finished')
+            stopBubbling()
+        }
+    }, mode.time)
+}
+
+const stopBubbling = () => {
+    startBtn.disabled = false
+    stopBtn.disabled = true
+    updateTable();
+    bubble.innerHTML = ""
+    isContinue = false
 
 }
+
+formMode.addEventListener("change", (e) => {
+    mode = modes[e.target.value];
+    clearInterval(bubleInterval);
+    if (isContinue) startBubbling();
+});
+
+
+const updateTable = () => {
+    let scores = JSON.parse(localStorage.getItem("scores")) || [];
+    scoresTable.innerHTML = "";
+    let tr = document.createElement("tr");
+    let nameTh = document.createElement("th");
+    let scoreTh = document.createElement("th");
+    nameTh.textContent = "Name";
+    scoreTh.textContent = "Score";
+    tr.appendChild(nameTh);
+    tr.appendChild(scoreTh);
+    scoresTable.appendChild(tr);
+
+    scores.sort((a, b) => b.score - a.score);
+
+
+};
+
+updateTable();
+
+startBtn.addEventListener("click", startBubbling);
+stopBtn.addEventListener("click", stopBubbling);
